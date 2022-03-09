@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml" >
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Chat</title>
+</head>
+<body>
+
+<form th:object="${chatForm}" th:action="@{/chat}" action="#" method="POST">
+    <label for="messageText">Message Text:</label>
+    <input id="messageText" type="text" th:field="*{message}">
+    <label for="testField">Test Field</label>
+    <input id="testField" name="testField" type="text">
+    <label for="messageType">Message Type: </label>
+
+
+    <select id="messageType" th:field="*{messageType}">
+        <option selected th:value="'say'" th:text="Say">Say</option>
+        <option th:value="'shout'" th:text="Shout">Shout</option>
+        <option th:value="'whisper'" th:text="Whisper">Whisper</option>
+    </select>
+    <input type="submit" id = "submit-button" >
+</form>
+<!-- THIS USES GETMAPPING IN CONTROLLER <a th:href="@{/logout}">Logout</a> -->
+<form name="logoutForm" th:action="@{/logout}" method="post" >
+    <input type="submit" id = "logout" value="Sign Out" />
+    <!-- THIS ONE USES POST, BUT USES A BUTTON -->
+<h1> Chat History: </h1>
+
+<h4 th:each="msg : ${chatMessages}"
+    th:text="${msg.username + ': ' + msg.message}"
+    id = "chatMessage" > Chats</h4>
+    <h4 th:text="${testField}"> test</h4>
+
+
+<!--
+<table>
+<tr>
+    <th>Username</th>
+    <th>Message</th>
+</tr>
+<tr th:each="msg : ${chatMessages}">
+    <td th:text="${msg.username}"></td>
+    <td th:text="${msg.message}"></td>
+</tr>
+</table>
+-->
+</body>
+</html>
