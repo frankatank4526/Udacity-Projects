@@ -1,11 +1,13 @@
 package com.udacity.vehicles.api;
 
 import com.udacity.vehicles.domain.car.Car;
+
 import org.springframework.hateoas.Resource;
 import org.springframework.hateoas.ResourceAssembler;
 import org.springframework.stereotype.Component;
 
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.*;
+
 
 /**
  * Maps the CarController to the Car class using HATEOAS

@@ -2,6 +2,7 @@ package com.udacity.vehicles.service;
 
 import com.udacity.vehicles.client.maps.MapsClient;
 import com.udacity.vehicles.client.prices.PriceClient;
+import com.udacity.vehicles.domain.Location;
 import com.udacity.vehicles.domain.car.Car;
 import com.udacity.vehicles.domain.car.CarRepository;
 import java.util.List;
@@ -62,7 +63,8 @@ public class CarService {
          * Note: The car class file uses @transient, meaning you will need to call
          *   the pricing service each time to get the price.
          */
-
+        String price = this.priceClient.getPrice(id);
+        car.setPrice(price);
 
         /**
          * TODO: Use the Maps Web client you create in `VehiclesApiApplication`
@@ -73,6 +75,8 @@ public class CarService {
          * meaning the Maps service needs to be called each time for the address.
          */
 
+        Location location = mapsClient.getAddress(car.getLocation());
+        car.setLocation(location);
 
         return car;
     }
@@ -104,12 +108,13 @@ public class CarService {
          * TODO: Find the car by ID from the `repository` if it exists.
          *   If it does not exist, throw a CarNotFoundException
          */
-
+        Optional<Car> carToFind = this.repository.findById(id);
+        Car car = carToFind.orElseThrow(CarNotFoundException::new);
 
         /**
          * TODO: Delete the car from the repository.
          */
 
-
+        this.repository.delete(car);
     }
 }
