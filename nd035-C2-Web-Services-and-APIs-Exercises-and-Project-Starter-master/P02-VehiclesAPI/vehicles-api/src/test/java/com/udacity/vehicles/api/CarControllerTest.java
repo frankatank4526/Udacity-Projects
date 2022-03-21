@@ -87,13 +87,13 @@ public class CarControllerTest {
     @Test
     public void createCar() throws Exception {
         Car car = getCar();
-//        mvc.perform(
-//                post(new URI("/cars"))
-//                        .content(json.write(car).getJson())
-//                        .contentType(MediaType.APPLICATION_JSON_UTF8)
-//                        .accept(MediaType.APPLICATION_JSON_UTF8))
-//                .andExpect(status().isCreated());
-        car.setId(1L);
+        mvc.perform(
+                post(new URI("/cars"))
+                        .content(json.write(car).getJson())
+                        .contentType(MediaType.APPLICATION_JSON_UTF8)
+                        .accept(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(status().isCreated());
+
     }
 
     /**
@@ -110,7 +110,7 @@ public class CarControllerTest {
         mvc.perform(get("/cars"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
-                        .andExpect(content().json("[]"));
+                        .andExpect(content().json("{\"_links\":{\"self\":{\"href\":\"http://localhost/cars\"}}}"));
 
         verify(carService, times(1)).list();
     }
@@ -125,6 +125,7 @@ public class CarControllerTest {
          * TODO: Add a test to check that the `get` method works by calling
          *   a vehicle by ID. This should utilize the car from `getCar()` below.
          */
+
     }
 
     /**

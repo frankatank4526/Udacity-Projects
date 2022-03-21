@@ -8,12 +8,14 @@ import com.udacity.vehicles.domain.car.Car;
 import com.udacity.vehicles.service.CarService;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.nio.charset.Charset;
 import java.util.List;
 import java.util.stream.Collectors;
 import javax.validation.Valid;
 
 import org.springframework.hateoas.Resource;
 import org.springframework.hateoas.Resources;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -28,12 +30,12 @@ import org.springframework.web.bind.annotation.RestController;
  * Implements a REST-based controller for the Vehicles API.
  */
 @RestController
-@RequestMapping("/cars")
+@RequestMapping(value = "/cars", produces= {MediaType.APPLICATION_JSON_VALUE})
 class CarController {
 
     private final CarService carService;
     private final CarResourceAssembler assembler;
-
+    private MediaType contentType = new MediaType("application", "hal+json", Charset.forName("UTF-8"));
     CarController(CarService carService, CarResourceAssembler assembler) {
         this.carService = carService;
         this.assembler = assembler;
@@ -56,7 +58,7 @@ class CarController {
      * @param id the id number of the given vehicle
      * @return all information for the requested vehicle
      */
-    @GetMapping("/{id}")
+    @GetMapping(value = "/{id}", produces= {MediaType.APPLICATION_JSON_VALUE})
     Resource<Car> get(@PathVariable Long id) {
         /**
          * TODO: Use the `findById` method from the Car Service to get car information.
