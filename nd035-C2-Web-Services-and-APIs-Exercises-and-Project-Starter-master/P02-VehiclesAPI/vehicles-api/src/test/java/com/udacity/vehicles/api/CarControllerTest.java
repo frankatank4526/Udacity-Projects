@@ -5,9 +5,7 @@ import static org.hamcrest.Matchers.is;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.times;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -24,7 +22,7 @@ import java.net.URI;
 import java.nio.charset.Charset;
 import java.util.Collections;
 
-import org.aspectj.lang.annotation.Before;
+import org.junit.Before;
 
 
 import org.junit.Test;
@@ -70,7 +68,7 @@ public class CarControllerTest {
     /**
      * Creates pre-requisites for testing, such as an example car.
      */
-    @Before("")
+    @Before
     public void setup() {
         Car car = getCar();
         car.setId(1L);
@@ -78,6 +76,7 @@ public class CarControllerTest {
         given(carService.findById(any())).willReturn(car);
         given(carService.list()).willReturn(Collections.singletonList(car));
     }
+
 
     /**
      * Tests for successful creation of new car in the system
@@ -114,6 +113,21 @@ public class CarControllerTest {
 
         verify(carService, times(1)).list();
     }
+/**
+ * Tests the update operation for a car by ID
+ * @throws Exception if car cannot be found
+ */
+@Test
+public void updateCar() throws Exception {
+    Car car = getCar();
+    mvc.perform(
+                    put(new URI("/cars/1"))
+                            .content(json.write(car).getJson())
+                            .contentType(MediaType.APPLICATION_JSON_UTF8)
+                            .accept(MediaType.APPLICATION_JSON_UTF8))
+            .andExpect(status().isOk());
+}
+
 
     /**
      * Tests the read operation for a single car by ID.
@@ -126,6 +140,12 @@ public class CarControllerTest {
          *   a vehicle by ID. This should utilize the car from `getCar()` below.
          */
 
+        mvc.perform(get("/cars/1"))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(content().json("{\"_links\":{\"self\":{\"href\":\"http://localhost/cars/1\"}}}"));
+
+        verify(carService, times(1)).findById(1L);
     }
 
     /**
@@ -139,6 +159,10 @@ public class CarControllerTest {
          *   when the `delete` method is called from the Car Controller. This
          *   should utilize the car from `getCar()` below.
          */
+        mvc.perform(delete(new URI(("/cars/1")))
+                        .accept(MediaType.APPLICATION_JSON_UTF8)
+                        .contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(status().isNoContent());
     }
 
     /**
